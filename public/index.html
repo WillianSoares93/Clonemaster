@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clonador de Páginas</title>
+  <script>
+    // Função para verificar se o usuário está autenticado
+    function checkLogin() {
+      const loggedIn = localStorage.getItem('loggedIn');
+      console.log(`loggedIn: ${loggedIn}`); // Verifique no console se está como 'true'
+
+      // Se o usuário não estiver logado, redireciona para login.html
+      if (!loggedIn || loggedIn !== 'true') {
+        // Redireciona para login.html
+        window.location.href = '/login.html'; 
+      }
+    }
+
+    // Chama a função de verificação assim que a página começa a carregar
+    window.addEventListener('DOMContentLoaded', checkLogin);
+  </script>
+</head>
+<body>
+  <div>
+    <h1>Clonador de Páginas</h1>
+    <form id="cloneForm">
+      <input type="url" id="url" placeholder="Insira a URL" required />
+      <button type="submit">Clonar</button>
+    </form>
+    <div id="message"></div>
+  </div>
+
+  <script>
+    // Lógica do formulário de clonagem
+    document.getElementById('cloneForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const url = document.getElementById('url').value;
+      const user_id = localStorage.getItem('user_id'); // Pega o ID do usuário logado
+
+      const response = await fetch('/api/clone', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url, user_id })
+      });
+
+      const message = await response.text();
+      document.getElementById('message').innerHTML = message;
+    });
+  </script>
+</body>
+</html>

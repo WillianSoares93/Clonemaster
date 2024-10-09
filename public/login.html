@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Clonemaster</title>
+</head>
+<body>
+  <div>
+    <h1>Login</h1>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Senha" required />
+      <button type="submit">Entrar</button>
+    </form>
+    <div id="message"></div>
+  </div>
+
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script>
+    const supabaseUrl = 'https://vswjldmrihidzqjiukel.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZzd2psZG1yaWhpZHpxaml1a2VsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg0NzEwNDcsImV4cCI6MjA0NDA0NzA0N30.FdfZLgFmaEpFg0N2ifL_B40FoCdrIKrVcj7TKWzY4y4';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    // Função de login
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        document.getElementById('message').innerHTML = `<p style="color:red">${error.message}</p>`;
+      } else {
+        localStorage.setItem('user_id', data.user.id); // Armazena o user_id no localStorage
+        window.location.href = '/index.html'; // Redireciona para a página de clonar
+      }
+    });
+  </script>
+</body>
+</html>
